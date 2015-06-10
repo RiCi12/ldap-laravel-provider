@@ -6,7 +6,7 @@
  * Time: 09:02
  */
 
-namespace RiCi12\LdapLaravelProvider;
+namespace RiCi12\LdapLaravelProvider\Exception;
 
 
 class BindingErrorException extends \Exception {

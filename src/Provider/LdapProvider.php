@@ -1,20 +1,13 @@
 <?php
 
-namespace RiCi12\LdapLaravelProvider;
+namespace RiCi12\LdapLaravelProvider\Provider;
 
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use \Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+use RiCi12\LdapLaravelProvider\Exception\BindingErrorException;
 
 class LdapProvider implements UserProvider {
-
-    /**
-     * The hasher implementation.
-     *
-     * @var \Illuminate\Contracts\Hashing\Hasher
-     */
-    protected $hasher;
 
     /**
      * The Eloquent user model.
@@ -57,7 +50,8 @@ class LdapProvider implements UserProvider {
         try {
             $ldapconn = ldap_connect($this->ldapServer);
             if($ldapconn) {
-                return @ldap_bind($ldapconn,
+                return @ldap_bind(
+                    $ldapconn,
                     $this->ldapDomainName.$credentials[$this->usernameCredentialsAttribute],
                     $credentials[$this->passwordCredentialsAttribute]
                 );
@@ -70,12 +64,10 @@ class LdapProvider implements UserProvider {
 
     /**
      * Create a new ldap user provider
-     * @param HasherContract $hasher
      * @param $model
      */
-    public function __construct(HasherContract $hasher, $model) {
+    public function __construct($model) {
         $this->model = $model;
-        $this->hasher = $hasher;
     }
 
     /**
@@ -86,7 +78,6 @@ class LdapProvider implements UserProvider {
      */
     public function retrieveById($identifier)
     {
-        //return User::find($identifier);
         return $this->createModel()->newQuery()->find($identifier);
     }
 
@@ -122,7 +113,6 @@ class LdapProvider implements UserProvider {
     public function retrieveByCredentials(array $credentials)
     {
         if($this->connectToServer($credentials)) {
-            //return User::where('username', $credentials[$this->usernameCredentialsAttribute])->first();
             return $this->createModel()->newQuery()->where('username', $credentials[$this->usernameCredentialsAttribute])->first();
         }
     }
