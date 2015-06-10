@@ -5,7 +5,9 @@ namespace RiCi12\LdapLaravelProvider\Provider;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use \Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Support\Facades\App;
 use RiCi12\LdapLaravelProvider\Exception\BindingErrorException;
+use RiCi12\LdapLaravelProvider\Exception\UserModelNotFoundException;
 
 class LdapProvider implements UserProvider {
 
@@ -17,28 +19,11 @@ class LdapProvider implements UserProvider {
     protected $model;
 
     /**
-     * Server URL
+     * Must be changed in config\auth.php
+     * See documentation.
      * @var string
      */
-    protected $ldapServer = '';
-
-    /**
-     * Domain name, can be empty
-     * @var string
-     */
-    protected $ldapDomainName = '';
-
-    /**
-     * Name of username attribute from credentials input
-     * @var string
-     */
-    protected $usernameCredentialsAttribute = 'username';
-
-    /**
-     * Name of password atribute from credentials input
-     * @var string
-     */
-    protected $passwordCredentialsAttribute = 'password';
+    protected $ldapServer, $ldapDomainName,$usernameCredentialsAttribute,$passwordCredentialsAttribute;
 
     /**
      * Connect to server, return true if credentials are accepted, false otherwise
@@ -68,17 +53,28 @@ class LdapProvider implements UserProvider {
      */
     public function __construct($model) {
         $this->model = $model;
+
+        $app = App::getInstance();
+        $this->ldapServer = $app['config']['auth.ldapprovider.ldapServer'];
+        $this->ldapDomainName = $app['config']['auth.ldapprovider.ldapDomainName'];
+        $this->usernameCredentialsAttribute = $app['config']['auth.ldapprovider.usernameCredentialsAttribute'];
+        $this->passwordCredentialsAttribute = $app['config']['auth.ldapprovider.passwordCredentialsAttribute'];
     }
 
     /**
      * Retrieve a user by their unique identifier.
      *
      * @param  mixed $identifier
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
+     * @throws UserModelNotFoundException
      */
     public function retrieveById($identifier)
     {
-        return $this->createModel()->newQuery()->find($identifier);
+        try {
+            return $this->createModel()->newQuery()->findOrFail($identifier);
+        } catch (Exception $e) {
+            throw new UserModelNotFoundException();
+        }
     }
 
     /**
@@ -89,7 +85,13 @@ class LdapProvider implements UserProvider {
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveByToken($identifier, $token)
-    {}
+    {
+        $model = $this->createModel();
+        return $model->newQuery()
+            ->where($model->getKeyName(), $identifier)
+            ->where($model->getRememberTokenName(), $token)
+            ->first();
+    }
 
     /**
      * Update the "remember me" token for the given user in storage.
@@ -108,12 +110,21 @@ class LdapProvider implements UserProvider {
      * Retrieve a user by the given credentials.
      *
      * @param  array $credentials
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
+     * @throws BindingErrorException
+     * @throws UserModelNotFoundException
      */
     public function retrieveByCredentials(array $credentials)
     {
+        //Check credentials
         if($this->connectToServer($credentials)) {
-            return $this->createModel()->newQuery()->where('username', $credentials[$this->usernameCredentialsAttribute])->first();
+            //Search user model in the "second" db
+            $user = $this->createModel()->newQuery()->where('username', $credentials[$this->usernameCredentialsAttribute])->first();
+            if($user != null)
+                //If a user is found, return it
+                return $user;
+            //No model found
+            throw new UserModelNotFoundException();
         }
     }
 

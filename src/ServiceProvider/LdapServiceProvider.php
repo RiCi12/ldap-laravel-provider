@@ -1,16 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: rciman
- * Date: 10/06/2015
- * Time: 10:10
- */
 
 namespace RiCi12\LdapLaravelProvider\ServiceProvider;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use RiCi12\LdapLaravelProvider\Provider\LdapProvider;
+
+/**
+ *
+ * Service provider for LdapLaravelProvider - extends Auth system registering ldap auth system
+ * @package RiCi12\LdapLaravelProvider\ServiceProvider
+ */
 
 class LdapServiceProvider extends ServiceProvider
 {
