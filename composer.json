@@ -1,5 +1,5 @@
 {
-	"name":	"RiCi12/ldap-laravel-provider",
+	"name":	"rici12/ldap-laravel-provider",
 	"description":	"Lean and simple Ldap provider for Laravel 5.1",
 	"keywords":	["laravel", "ldap"],
 	"license":	"MIT",
