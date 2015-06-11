@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\App;
 use RiCi12\LdapLaravelProvider\Exception\BindingErrorException;
 use RiCi12\LdapLaravelProvider\Exception\UserModelNotFoundException;
 
-class LdapProvider implements UserProvider {
+class LdapProvider implements UserProvider 
+{
 
     /**
      * The Eloquent user model.
@@ -31,7 +32,8 @@ class LdapProvider implements UserProvider {
      * @return bool
      * @throws BindingErrorException
      */
-    private function connectToServer(array $credentials) {
+    private function connectToServer(array $credentials) 
+    {
         try {
             $ldapconn = ldap_connect($this->ldapServer);
             if($ldapconn) {
@@ -51,7 +53,8 @@ class LdapProvider implements UserProvider {
      * Create a new ldap user provider
      * @param $model
      */
-    public function __construct($model) {
+    public function __construct($model) 
+    {
         $this->model = $model;
 
         $app = App::getInstance();
