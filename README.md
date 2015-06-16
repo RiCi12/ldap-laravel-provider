@@ -24,14 +24,13 @@ Then open *config/auth.php* and change your *driver* option
 ```
 'driver' => 'ldap'
 ```
-And add the array for the options
+Open the *.env* file and add the required options
 ```
-LDAPSERVER = auth.magrathea.com //Your ldap server
-LDAPDOMAINNAME = MAGRATHEA\\ //Domain name, can be empty
-USERNAMECREDENTIALSATTRIBUTE = username //Name of the username attribute given into the credential input form
-PASSWORDCREDENTIALSATTRIBUTE = password, //Name of the password attribute given into the credential input form
+LDAPSERVER = auth.magrathea.com 
+LDAPDOMAINNAME = MAGRATHEA\ 
+USERNAMECREDENTIALSATTRIBUTE = username 
+PASSWORDCREDENTIALSATTRIBUTE = password
 ```
-and fill it with yours.
 
 ### Work flow
 1. Try to connect to the provided server
