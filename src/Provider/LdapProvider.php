@@ -20,7 +20,7 @@ class LdapProvider implements UserProvider
     protected $model;
 
     /**
-     * Must be changed in config\auth.php
+     * Must be set in.env
      * See documentation.
      * @var string
      */
@@ -56,12 +56,10 @@ class LdapProvider implements UserProvider
     public function __construct($model) 
     {
         $this->model = $model;
-
-        $app = App::getInstance();
-        $this->ldapServer = $app['config']['auth.ldapprovider.ldapServer'];
-        $this->ldapDomainName = $app['config']['auth.ldapprovider.ldapDomainName'];
-        $this->usernameCredentialsAttribute = $app['config']['auth.ldapprovider.usernameCredentialsAttribute'];
-        $this->passwordCredentialsAttribute = $app['config']['auth.ldapprovider.passwordCredentialsAttribute'];
+        $this->ldapServer = env('LDAPSERVER');
+        $this->ldapDomainName = env('LDAPDOMAINNAME');
+        $this->usernameCredentialsAttribute = env('USERNAMECREDENTIALSATTRIBUTE');
+        $this->passwordCredentialsAttribute = env('PASSWORDCREDENTIALSATTRIBUTE');
     }
 
     /**

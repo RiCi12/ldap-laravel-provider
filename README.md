@@ -18,20 +18,18 @@ composer update
 ```
 After that, open *config/app.php* and add to your *service providers* list
 ```
-RiCi12\LdapLaravelProvider\ServiceProvider\LdapServiceProvider
+RiCi12\LdapLaravelProvider\ServiceProvider\LdapServiceProvider::class
 ```
 Then open *config/auth.php* and change your *driver* option
 ```
 'driver' => 'ldap'
 ```
 And add the array for the options
-```php
-'ldapprovider' => [
-  'ldapServer' => 'auth.magrathea.com', //Your ldap server
-  'ldapDomainName' => 'MAGRATHEA\\', //Domain name, can be empty
-  'usernameCredentialsAttribute' => 'username', //Name of the username attribute given into the credential input form
-  'passwordCredentialsAttribute' => 'password', //Name of the password attribute given into the credential input form
-]
+```
+LDAPSERVER = auth.magrathea.com //Your ldap server
+LDAPDOMAINNAME = MAGRATHEA\\ //Domain name, can be empty
+USERNAMECREDENTIALSATTRIBUTE = username //Name of the username attribute given into the credential input form
+PASSWORDCREDENTIALSATTRIBUTE = password, //Name of the password attribute given into the credential input form
 ```
 and fill it with yours.
 
