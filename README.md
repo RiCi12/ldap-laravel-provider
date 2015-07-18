@@ -1,8 +1,8 @@
 # LdapLaravelProvider
-Lean and simple ldap provider for Laravel 5.1.
+Lean and simple ldap provider for Laravel 5.1. Works only with Active Directory system.
 
 ### When is this package useful?
-When you need to authenticate your user against a ldap server, while maintaining a *users* table in your database.
+When you need to authenticate your user against a ldap server (Active Directory system), while maintaining a *users* table in your database.
 
 ### What is included?
 A provider and its service provider.
