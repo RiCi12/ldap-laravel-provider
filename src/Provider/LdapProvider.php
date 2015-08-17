@@ -32,7 +32,7 @@ class LdapProvider implements UserProvider
      * @return bool
      * @throws BindingErrorException
      */
-    private function connectToServer(array $credentials) 
+    protected function connectToServer(array $credentials) 
     {
         try {
             $ldapconn = ldap_connect($this->ldapServer);
